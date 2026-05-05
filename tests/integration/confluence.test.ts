@@ -1,0 +1,231 @@
+import { describe, beforeAll, afterAll, beforeEach, it, expect } from "vitest";
+import {
+  setupWiremock,
+  teardownWiremock,
+  getClient,
+  stubRequest,
+  resetStubs,
+} from "./setup.js";
+import { MockMcpServer } from "./mock-mcp-server.js";
+import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { registerConfluenceSearch } from "../../src/tools/confluence/search.js";
+import { registerConfluenceGetPage } from "../../src/tools/confluence/get-page.js";
+import { registerConfluenceCreatePage } from "../../src/tools/confluence/create-page.js";
+import { registerConfluenceGetPageChildren } from "../../src/tools/confluence/get-page-children.js";
+import { registerConfluenceUpdatePage } from "../../src/tools/confluence/update-page.js";
+import { registerConfluenceUpdatePageDiff } from "../../src/tools/confluence/update-page-diff.js";
+
+describe("Confluence tools integration", () => {
+  beforeAll(async () => {
+    await setupWiremock();
+  });
+
+  afterAll(async () => {
+    await teardownWiremock();
+  });
+
+  beforeEach(async () => {
+    await resetStubs();
+  });
+
+  it("confluence_search returns pages", async () => {
+    const mockResponse = {
+      results: [
+        {
+          id: "12345",
+          type: "page",
+          status: "current",
+          title: "Hello Page",
+          space: { id: 1, key: "TEST", name: "Test", type: "global" },
+          version: { by: { username: "alice", displayName: "Alice" }, when: "2024-01-01", number: 1 },
+          _links: { webui: "/display/TEST/Hello+Page", self: "http://localhost/rest/api/content/12345" },
+        },
+      ],
+      start: 0,
+      limit: 10,
+      size: 1,
+      totalSize: 1,
+    };
+    await stubRequest("GET", "/confluence/rest/api/content/search", mockResponse);
+
+    const server = new MockMcpServer();
+    registerConfluenceSearch(server as unknown as McpServer, getClient());
+
+    const result = await server.callTool("atlassian_confluence_search", { cql: "type=page AND space=TEST" });
+    expect(result.isError).toBeUndefined();
+    const parsed = JSON.parse(result.content[0].text);
+    expect(parsed.results[0].title).toBe("Hello Page");
+  });
+
+  it("confluence_get_page returns page details", async () => {
+    const mockResponse = {
+      id: "12345",
+      type: "page",
+      status: "current",
+      title: "Hello Page",
+      space: { id: 1, key: "TEST", name: "Test", type: "global" },
+      version: { by: { username: "alice", displayName: "Alice" }, when: "2024-01-01", number: 1 },
+      body: { storage: { value: "<p>Hello world</p>", representation: "storage" } },
+      _links: { webui: "/display/TEST/Hello+Page", self: "http://localhost/rest/api/content/12345" },
+    };
+    await stubRequest("GET", "/confluence/rest/api/content/12345", mockResponse);
+
+    const server = new MockMcpServer();
+    registerConfluenceGetPage(server as unknown as McpServer, getClient());
+
+    const result = await server.callTool("atlassian_confluence_get_page", { pageId: "12345" });
+    expect(result.isError).toBeUndefined();
+    const parsed = JSON.parse(result.content[0].text);
+    expect(parsed.title).toBe("Hello Page");
+    expect(parsed.body.storage.value).toBe("<p>Hello world</p>");
+  });
+
+  it("confluence_create_page returns created page", async () => {
+    const mockResponse = {
+      id: "12346",
+      title: "New Page",
+      version: { number: 1 },
+      _links: { webui: "/display/TEST/New+Page", self: "http://localhost/rest/api/content/12346" },
+    };
+    await stubRequest("POST", "/confluence/rest/api/content", mockResponse);
+
+    const server = new MockMcpServer();
+    registerConfluenceCreatePage(server as unknown as McpServer, getClient());
+
+    const result = await server.callTool("atlassian_confluence_create_page", {
+      spaceKey: "TEST",
+      title: "New Page",
+      content: "<p>Body</p>",
+      representation: "storage",
+    });
+    expect(result.isError).toBeUndefined();
+    const parsed = JSON.parse(result.content[0].text);
+    expect(parsed.title).toBe("New Page");
+  });
+
+  it("confluence_get_page_children returns child pages", async () => {
+    const mockResponse = {
+      page: {
+        results: [
+          {
+            id: "12347",
+            type: "page",
+            status: "current",
+            title: "Child Page",
+            _links: { webui: "/display/TEST/Child+Page", self: "http://localhost/rest/api/content/12347" },
+          },
+        ],
+        start: 0,
+        limit: 25,
+        size: 1,
+      },
+    };
+    await stubRequest("GET", "/confluence/rest/api/content/12345/child", mockResponse);
+
+    const server = new MockMcpServer();
+    registerConfluenceGetPageChildren(server as unknown as McpServer, getClient());
+
+    const result = await server.callTool("atlassian_confluence_get_page_children", { pageId: "12345" });
+    expect(result.isError).toBeUndefined();
+    const parsed = JSON.parse(result.content[0].text);
+    expect(parsed.page.results[0].title).toBe("Child Page");
+  });
+
+  it("confluence_update_page fetches version and updates page", async () => {
+    const getResponse = {
+      id: "12345",
+      type: "page",
+      status: "current",
+      title: "Old Title",
+      version: { by: { username: "alice", displayName: "Alice" }, when: "2024-01-01", number: 3 },
+      _links: { webui: "/display/TEST/Old+Title", self: "http://localhost/rest/api/content/12345" },
+    };
+    const putResponse = {
+      id: "12345",
+      title: "New Title",
+      version: { number: 4 },
+      _links: { webui: "/display/TEST/New+Title", self: "http://localhost/rest/api/content/12345" },
+    };
+    await stubRequest("GET", "/confluence/rest/api/content/12345", getResponse);
+    await stubRequest("PUT", "/confluence/rest/api/content/12345", putResponse);
+
+    const server = new MockMcpServer();
+    registerConfluenceUpdatePage(server as unknown as McpServer, getClient());
+
+    const result = await server.callTool("atlassian_confluence_update_page", {
+      pageId: "12345",
+      title: "New Title",
+      content: "<p>Updated body</p>",
+      representation: "storage",
+    });
+    expect(result.isError).toBeUndefined();
+    const parsed = JSON.parse(result.content[0].text);
+    expect(parsed.title).toBe("New Title");
+    expect(parsed.version.number).toBe(4);
+  });
+
+  it("confluence_update_page_diff applies replacements", async () => {
+    const getResponse = {
+      id: "12345",
+      type: "page",
+      status: "current",
+      title: "My Page",
+      version: { by: { username: "alice", displayName: "Alice" }, when: "2024-01-01", number: 2 },
+      body: { storage: { value: "<p>old text here</p>", representation: "storage" } },
+      _links: { webui: "/display/TEST/My+Page", self: "http://localhost/rest/api/content/12345" },
+    };
+    const putResponse = {
+      id: "12345",
+      title: "My Page",
+      version: { number: 3 },
+      _links: { webui: "/display/TEST/My+Page", self: "http://localhost/rest/api/content/12345" },
+    };
+    await stubRequest("GET", "/confluence/rest/api/content/12345", getResponse);
+    await stubRequest("PUT", "/confluence/rest/api/content/12345", putResponse);
+
+    const server = new MockMcpServer();
+    registerConfluenceUpdatePageDiff(server as unknown as McpServer, getClient());
+
+    const result = await server.callTool("atlassian_confluence_update_page_diff", {
+      pageId: "12345",
+      replacements: [{ search: "old text", replace: "new text" }],
+    });
+    expect(result.isError).toBeUndefined();
+    const parsed = JSON.parse(result.content[0].text);
+    expect(parsed.version.number).toBe(3);
+  });
+
+  it("confluence_update_page_diff returns error when search text not found", async () => {
+    const getResponse = {
+      id: "12345",
+      type: "page",
+      status: "current",
+      title: "My Page",
+      version: { by: { username: "alice", displayName: "Alice" }, when: "2024-01-01", number: 2 },
+      body: { storage: { value: "<p>existing content</p>", representation: "storage" } },
+      _links: { webui: "/display/TEST/My+Page", self: "http://localhost/rest/api/content/12345" },
+    };
+    await stubRequest("GET", "/confluence/rest/api/content/12345", getResponse);
+
+    const server = new MockMcpServer();
+    registerConfluenceUpdatePageDiff(server as unknown as McpServer, getClient());
+
+    const result = await server.callTool("atlassian_confluence_update_page_diff", {
+      pageId: "12345",
+      replacements: [{ search: "missing text", replace: "new text" }],
+    });
+    expect(result.isError).toBe(true);
+    expect(result.content[0].text).toContain("search text not found");
+  });
+
+  it("confluence_get_page returns error on 404", async () => {
+    await stubRequest("GET", "/confluence/rest/api/content/99999", { message: "No content found with id : 99999" }, 404);
+
+    const server = new MockMcpServer();
+    registerConfluenceGetPage(server as unknown as McpServer, getClient());
+
+    const result = await server.callTool("atlassian_confluence_get_page", { pageId: "99999" });
+    expect(result.isError).toBe(true);
+    expect(result.content[0].text).toContain("404");
+  });
+});
