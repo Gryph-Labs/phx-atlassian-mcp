@@ -7,6 +7,7 @@ import { registerConfluenceCreatePage } from "./create-page.js";
 import { registerConfluenceUpdatePage } from "./update-page.js";
 import { registerConfluenceUpdatePageDiff } from "./update-page-diff.js";
 import { registerConfluenceGetPageComments } from "./get-page-comments.js";
+import { registerConfluenceAddPageComment } from "./add-page-comment.js";
 
 export function registerConfluenceTools(
   server: McpServer,
@@ -19,4 +20,5 @@ export function registerConfluenceTools(
   registerConfluenceUpdatePage(server, client);
   registerConfluenceUpdatePageDiff(server, client);
   registerConfluenceGetPageComments(server, client);
+  registerConfluenceAddPageComment(server, client);
 }
