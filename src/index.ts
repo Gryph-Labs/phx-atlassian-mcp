@@ -3,7 +3,7 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { loadConfig } from "./config.js";
-import { AtlassianClient } from "./http-client.js";
+import { AtlassianClient, IAtlassianClient } from "./http-client.js";
 import { registerJiraTools } from "./tools/jira/index.js";
 import { registerBitbucketTools } from "./tools/bitbucket/index.js";
 import { registerConfluenceTools } from "./tools/confluence/index.js";

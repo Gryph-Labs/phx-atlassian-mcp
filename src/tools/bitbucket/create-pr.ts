@@ -1,9 +1,9 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { AtlassianClient } from "../../http-client.js";
+import { IAtlassianClient } from "../../http-client.js";
 import { BitbucketPullRequest } from "../../types/bitbucket.js";
 
-export function registerBbCreatePullRequest(server: McpServer, client: AtlassianClient) {
+export function registerBbCreatePullRequest(server: McpServer, client: IAtlassianClient) {
   server.tool(
     "atlassian_bb_create_pull_request",
     "Create a new pull request in a Bitbucket repository",

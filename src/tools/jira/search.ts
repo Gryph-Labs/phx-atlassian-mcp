@@ -1,9 +1,9 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { AtlassianClient } from "../../http-client.js";
+import { IAtlassianClient } from "../../http-client.js";
 import { JiraSearchResponse } from "../../types/jira.js";
 
-export function registerJiraSearch(server: McpServer, client: AtlassianClient) {
+export function registerJiraSearch(server: McpServer, client: IAtlassianClient) {
   server.tool(
     "atlassian_jira_search",
     "Search for Jira issues using JQL",

@@ -1,6 +1,6 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
-import { AtlassianClient } from '../../http-client.js';
+import { IAtlassianClient } from '../../http-client.js';
 import {
   BitbucketPagedResponse,
   BitbucketPrActivity,
@@ -45,7 +45,7 @@ function formatComment(comment: BitbucketThreadedComment): FormattedComment {
   };
 }
 
-export function registerBbGetPrComments(server: McpServer, client: AtlassianClient) {
+export function registerBbGetPrComments(server: McpServer, client: IAtlassianClient) {
   server.tool(
     'atlassian_bb_get_pr_comments',
     'Get code review comments and discussions on a Bitbucket pull request. ' +

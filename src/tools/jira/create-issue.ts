@@ -1,8 +1,8 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { AtlassianClient } from "../../http-client.js";
+import { IAtlassianClient } from "../../http-client.js";
 
-export function registerJiraCreateIssue(server: McpServer, client: AtlassianClient) {
+export function registerJiraCreateIssue(server: McpServer, client: IAtlassianClient) {
   server.tool(
     "atlassian_jira_create_issue",
     "Create a new Jira issue",

@@ -10,7 +10,15 @@ function toHeader(auth: AuthConfig): string {
   return `Bearer ${auth.token}`;
 }
 
-export class AtlassianClient {
+export interface IAtlassianClient {
+  jira<T = unknown>(method: string, path: string, body?: unknown): Promise<T>;
+  bitbucket<T = unknown>(method: string, path: string, body?: unknown): Promise<T>;
+  confluence<T = unknown>(method: string, path: string, body?: unknown): Promise<T>;
+  bitbucketRaw(method: string, path: string): Promise<string>;
+  bitbucketCommentLikes<T = unknown>(method: string, path: string, body?: unknown): Promise<T>;
+}
+
+export class AtlassianClient implements IAtlassianClient {
   private jiraConfig?: ServiceConfig;
   private bitbucketConfig?: ServiceConfig;
   private confluenceConfig?: ServiceConfig;

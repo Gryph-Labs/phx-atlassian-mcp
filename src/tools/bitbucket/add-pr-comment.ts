@@ -1,9 +1,9 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { AtlassianClient } from "../../http-client.js";
+import { IAtlassianClient } from "../../http-client.js";
 import { BitbucketComment } from "../../types/bitbucket.js";
 
-export function registerBbAddPrComment(server: McpServer, client: AtlassianClient) {
+export function registerBbAddPrComment(server: McpServer, client: IAtlassianClient) {
   server.tool(
     "atlassian_bb_add_pr_comment",
     "Add a comment to a Bitbucket pull request. Can be a general PR comment or an inline comment on a specific file/line.",

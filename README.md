@@ -316,6 +316,8 @@ Add to your `opencode.json` config:
 
 ## Running
 
+### Local (stdio)
+
 ```bash
 npm start
 ```
@@ -324,6 +326,10 @@ The server runs on stdio and logs which services are active on stderr:
 ```
 Atlassian MCP server running on stdio [Jira (Cloud), Confluence (Cloud)]
 ```
+
+### Remote Server (Streamable HTTP)
+
+See **[HOSTING.md](HOSTING.md)** for deploying as an HTTP server with Docker, PM2, reverse proxy, and production hardening.
 
 ---
 

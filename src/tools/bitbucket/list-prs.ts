@@ -1,9 +1,9 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { AtlassianClient } from "../../http-client.js";
+import { IAtlassianClient } from "../../http-client.js";
 import { BitbucketPagedResponse, BitbucketPullRequest } from "../../types/bitbucket.js";
 
-export function registerBbListPullRequests(server: McpServer, client: AtlassianClient) {
+export function registerBbListPullRequests(server: McpServer, client: IAtlassianClient) {
   server.tool(
     "atlassian_bb_list_pull_requests",
     "List pull requests in a Bitbucket repository",

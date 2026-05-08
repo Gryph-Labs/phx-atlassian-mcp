@@ -1,9 +1,9 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { AtlassianClient } from "../../http-client.js";
+import { IAtlassianClient } from "../../http-client.js";
 import { BitbucketPullRequest } from "../../types/bitbucket.js";
 
-export function registerBbMergePullRequest(server: McpServer, client: AtlassianClient) {
+export function registerBbMergePullRequest(server: McpServer, client: IAtlassianClient) {
   server.tool(
     "atlassian_bb_merge_pull_request",
     "Merge a Bitbucket pull request",

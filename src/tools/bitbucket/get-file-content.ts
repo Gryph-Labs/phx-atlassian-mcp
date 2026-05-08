@@ -1,8 +1,8 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { AtlassianClient } from "../../http-client.js";
+import { IAtlassianClient } from "../../http-client.js";
 
-export function registerBbGetFileContent(server: McpServer, client: AtlassianClient) {
+export function registerBbGetFileContent(server: McpServer, client: IAtlassianClient) {
   server.tool(
     "atlassian_bb_get_file_content",
     "Get raw file content from a Bitbucket repository",

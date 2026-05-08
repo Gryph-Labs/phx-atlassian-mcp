@@ -1,9 +1,9 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { AtlassianClient } from "../../http-client.js";
+import { IAtlassianClient } from "../../http-client.js";
 import { BitbucketThreadedComment } from "../../types/bitbucket.js";
 
-export function registerBbResolvePrComment(server: McpServer, client: AtlassianClient) {
+export function registerBbResolvePrComment(server: McpServer, client: IAtlassianClient) {
   server.tool(
     "atlassian_bb_resolve_pr_comment",
     "Resolve or reopen a comment thread on a Bitbucket pull request. " +

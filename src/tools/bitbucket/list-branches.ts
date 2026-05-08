@@ -1,9 +1,9 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { AtlassianClient } from "../../http-client.js";
+import { IAtlassianClient } from "../../http-client.js";
 import { BitbucketPagedResponse, BitbucketBranch } from "../../types/bitbucket.js";
 
-export function registerBbListBranches(server: McpServer, client: AtlassianClient) {
+export function registerBbListBranches(server: McpServer, client: IAtlassianClient) {
   server.tool(
     "atlassian_bb_list_branches",
     "List branches in a Bitbucket repository",

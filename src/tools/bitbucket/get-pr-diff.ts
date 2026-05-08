@@ -1,8 +1,8 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { AtlassianClient } from "../../http-client.js";
+import { IAtlassianClient } from "../../http-client.js";
 
-export function registerBbGetPrDiff(server: McpServer, client: AtlassianClient) {
+export function registerBbGetPrDiff(server: McpServer, client: IAtlassianClient) {
   server.tool(
     "atlassian_bb_get_pr_diff",
     "Get the diff of a Bitbucket pull request in unified diff format (.diff). " +

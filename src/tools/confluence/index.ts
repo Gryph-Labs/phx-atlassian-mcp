@@ -1,5 +1,5 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { AtlassianClient } from "../../http-client.js";
+import { IAtlassianClient } from "../../http-client.js";
 import { registerConfluenceGetPage } from "./get-page.js";
 import { registerConfluenceSearch } from "./search.js";
 import { registerConfluenceGetPageChildren } from "./get-page-children.js";
@@ -11,7 +11,7 @@ import { registerConfluenceAddPageComment } from "./add-page-comment.js";
 
 export function registerConfluenceTools(
   server: McpServer,
-  client: AtlassianClient,
+  client: IAtlassianClient,
 ) {
   registerConfluenceGetPage(server, client);
   registerConfluenceSearch(server, client);

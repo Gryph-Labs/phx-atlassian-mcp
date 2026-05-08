@@ -1,9 +1,9 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { AtlassianClient } from "../../http-client.js";
+import { IAtlassianClient } from "../../http-client.js";
 import { BitbucketThreadedComment } from "../../types/bitbucket.js";
 
-export function registerBbAddPrCommentReaction(server: McpServer, client: AtlassianClient) {
+export function registerBbAddPrCommentReaction(server: McpServer, client: IAtlassianClient) {
   server.tool(
     "atlassian_bb_add_pr_comment_reaction",
     "Add an emoji reaction to a Bitbucket pull request comment. " +

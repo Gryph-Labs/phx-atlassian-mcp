@@ -1,8 +1,8 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { AtlassianClient } from "../../http-client.js";
+import { IAtlassianClient } from "../../http-client.js";
 import { JiraProject } from "../../types/jira.js";
 
-export function registerJiraListProjects(server: McpServer, client: AtlassianClient) {
+export function registerJiraListProjects(server: McpServer, client: IAtlassianClient) {
   server.tool(
     "atlassian_jira_list_projects",
     "List all Jira projects accessible to the authenticated user",

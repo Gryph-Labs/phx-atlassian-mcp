@@ -1,9 +1,9 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { AtlassianClient } from "../../http-client.js";
+import { IAtlassianClient } from "../../http-client.js";
 import { JiraComment } from "../../types/jira.js";
 
-export function registerJiraAddComment(server: McpServer, client: AtlassianClient) {
+export function registerJiraAddComment(server: McpServer, client: IAtlassianClient) {
   server.tool(
     "atlassian_jira_add_comment",
     "Add a comment to a Jira issue",

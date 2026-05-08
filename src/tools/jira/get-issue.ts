@@ -1,9 +1,9 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { AtlassianClient } from "../../http-client.js";
+import { IAtlassianClient } from "../../http-client.js";
 import { JiraIssue } from "../../types/jira.js";
 
-export function registerJiraGetIssue(server: McpServer, client: AtlassianClient) {
+export function registerJiraGetIssue(server: McpServer, client: IAtlassianClient) {
   server.tool(
     "atlassian_jira_get_issue",
     "Get details of a specific Jira issue by key",

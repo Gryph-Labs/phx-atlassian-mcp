@@ -1,9 +1,9 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { AtlassianClient } from "../../http-client.js";
+import { IAtlassianClient } from "../../http-client.js";
 import { BitbucketRepo } from "../../types/bitbucket.js";
 
-export function registerBbGetRepo(server: McpServer, client: AtlassianClient) {
+export function registerBbGetRepo(server: McpServer, client: IAtlassianClient) {
   server.tool(
     "atlassian_bb_get_repo",
     "Get details of a specific Bitbucket repository",

@@ -1,5 +1,5 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
-import { AtlassianClient } from '../../http-client.js';
+import { IAtlassianClient } from '../../http-client.js';
 import { registerBbListRepos } from './list-repos.js';
 import { registerBbGetRepo } from './get-repo.js';
 import { registerBbListBranches } from './list-branches.js';
@@ -14,7 +14,7 @@ import { registerBbGetPrComments } from './get-pr-comments.js';
 import { registerBbResolvePrComment } from './resolve-pr-comment.js';
 import { registerBbAddPrCommentReaction } from './add-pr-comment-reaction.js';
 
-export function registerBitbucketTools(server: McpServer, client: AtlassianClient) {
+export function registerBitbucketTools(server: McpServer, client: IAtlassianClient) {
   registerBbListRepos(server, client);
   registerBbGetRepo(server, client);
   registerBbListBranches(server, client);

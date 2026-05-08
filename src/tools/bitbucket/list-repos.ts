@@ -1,9 +1,9 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { AtlassianClient } from "../../http-client.js";
+import { IAtlassianClient } from "../../http-client.js";
 import { BitbucketPagedResponse, BitbucketRepo } from "../../types/bitbucket.js";
 
-export function registerBbListRepos(server: McpServer, client: AtlassianClient) {
+export function registerBbListRepos(server: McpServer, client: IAtlassianClient) {
   server.tool(
     "atlassian_bb_list_repos",
     "List repositories in a Bitbucket project",

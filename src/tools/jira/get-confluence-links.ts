@@ -1,11 +1,11 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { AtlassianClient } from "../../http-client.js";
+import { IAtlassianClient } from "../../http-client.js";
 import { JiraRemoteLink } from "../../types/confluence.js";
 
 export function registerJiraGetConfluenceLinks(
   server: McpServer,
-  client: AtlassianClient,
+  client: IAtlassianClient,
 ) {
   server.tool(
     "atlassian_jira_get_confluence_links",
