@@ -2,12 +2,18 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { IAtlassianClient } from "../../http-client.js";
 import {
-  ALLOWED_WORKFLOW_STATUSES,
   assertProjectAllowed,
   assertStatusAllowed,
   normalize,
 } from "../../policy.js";
 import { JiraIssue, JiraTransitionsResponse } from "../../types/jira.js";
+
+const targetStatusSchema = z.enum([
+  "Backlog",
+  "To Do",
+  "In Progress",
+  "Ready for Review",
+]);
 
 export function registerJiraMoveIssue(server: McpServer, client: IAtlassianClient) {
   server.tool(
@@ -15,9 +21,7 @@ export function registerJiraMoveIssue(server: McpServer, client: IAtlassianClien
     "Move an allowed Jira issue between approved workflow states only. The server refuses all other target states, including Done, Closed, Cancelled, and Rejected.",
     {
       issueKey: z.string().describe("Issue key, for example PHX-123"),
-      targetStatus: z
-        .enum(ALLOWED_WORKFLOW_STATUSES)
-        .describe("Approved target status"),
+      targetStatus: targetStatusSchema.describe("Approved target status"),
     },
     async ({ issueKey, targetStatus }) => {
       try {
