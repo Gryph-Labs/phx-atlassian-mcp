@@ -18,27 +18,31 @@ afterEach(() => {
 });
 
 describe("Jira workflow policy", () => {
-  it("allows only the four approved workflow statuses", () => {
+  it("allows only the approved PHX workflow statuses", () => {
     expect(ALLOWED_WORKFLOW_STATUSES).toEqual([
       "Backlog",
-      "To Do",
+      "Selected for Development",
       "In Progress",
-      "Ready for Review",
     ]);
 
     expect(assertStatusAllowed("Backlog")).toBe("Backlog");
-    expect(assertStatusAllowed("todo")).toBe("To Do");
-    expect(assertStatusAllowed("in_progress")).toBe("In Progress");
-    expect(assertStatusAllowed("ready-for-review")).toBe("Ready for Review");
+    expect(assertStatusAllowed("selected_for_development")).toBe("Selected for Development");
+    expect(assertStatusAllowed("in-progress")).toBe("In Progress");
   });
 
-  it.each(["Done", "Closed", "Cancelled", "Rejected", "QA", "Deploy"])(
-    "denies target status %s",
-    (status) => {
-      expect(() => assertStatusAllowed(status)).toThrow(/Workflow transition denied/);
-      expect(resolveAllowedStatus(status)).toBeUndefined();
-    },
-  );
+  it.each([
+    "Done",
+    "Closed",
+    "Cancelled",
+    "Rejected",
+    "To Do",
+    "Ready for Review",
+    "QA",
+    "Deploy",
+  ])("denies target status %s", (status) => {
+    expect(() => assertStatusAllowed(status)).toThrow(/Workflow transition denied/);
+    expect(resolveAllowedStatus(status)).toBeUndefined();
+  });
 
   it("defaults Jira writes to PHX only", () => {
     delete process.env.JIRA_ALLOWED_PROJECTS;
