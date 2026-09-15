@@ -1,8 +1,7 @@
 export const ALLOWED_WORKFLOW_STATUSES = [
   "Backlog",
-  "To Do",
+  "Selected for Development",
   "In Progress",
-  "Ready for Review",
 ] as const;
 
 export type AllowedWorkflowStatus = (typeof ALLOWED_WORKFLOW_STATUSES)[number];
@@ -11,12 +10,11 @@ export function normalize(value: string): string {
   return value.trim().toLowerCase().replace(/[\s_-]+/g, " ");
 }
 
-const NORMALIZED_STATUS_MAP = new Map<string, AllowedWorkflowStatus>([
-  ...ALLOWED_WORKFLOW_STATUSES.map(
+const NORMALIZED_STATUS_MAP = new Map<string, AllowedWorkflowStatus>(
+  ALLOWED_WORKFLOW_STATUSES.map(
     (status) => [normalize(status), status] as const,
   ),
-  ["todo", "To Do"],
-]);
+);
 
 export function resolveAllowedStatus(value: string): AllowedWorkflowStatus | undefined {
   return NORMALIZED_STATUS_MAP.get(normalize(value));
